@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       try {
         await _firebaseProvider.getAppInfo().then((appInfoSnapshot) {
           if (appInfoSnapshot.exists) {
-            print(appInfoSnapshot);
             final String latVer = appInfoSnapshot.data()!['version'];
             final int latBuildNo = appInfoSnapshot.data()!['build_no'];
             int major = int.parse(_packageInfo.version.substring(0, 1));
@@ -171,26 +171,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bodyHeight = MediaQuery.of(context).size.height;
+    final bodyHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).viewInsets.bottom;
     final bodyWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            width: bodyWidth,
-            height: bodyHeight,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: bodyHeight * 0.1),
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 100.0,
-                ),
-                SizedBox(height: bodyHeight * 0.2),
-                _bodyArea(bodyWidth, bodyHeight)
-              ],
-            ),
+        child: Container(
+          width: bodyWidth,
+          height: bodyHeight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: bodyHeight * 0.1),
+              Image.asset(
+                'assets/images/logo.png',
+                height: 80.0,
+              ),
+              SizedBox(height: bodyHeight * 0.2),
+              _bodyArea(bodyWidth, bodyHeight)
+            ],
           ),
         ),
       ),
@@ -270,15 +269,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           children: [
             const SizedBox(height: 20.0),
-            Text(
-              'Welcome To NixLab',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: width * 0.09,
-                fontWeight: FontWeight.bold,
+            SizedBox(
+              height: width * 0.1,
+              child: WavyAnimatedTextKit(
+                text: ['Welcome To NixLab'],
+                textAlign: TextAlign.center,
+                textStyle: TextStyle(
+                  fontSize: width * 0.1,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 4.0),
             Text(
               'Code To Innovate',
               textAlign: TextAlign.center,
@@ -287,7 +289,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: height * 0.2),
+            SizedBox(height: height * 0.25),
             TextButton(
               onPressed: () {
                 Navigator.push(
@@ -302,12 +304,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Text(
                     'Next'.toUpperCase(),
                     style: TextStyle(
+                      color: Theme.of(context).accentColor,
                       fontSize: 20.0,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(width: 4.0),
-                  Icon(Icons.arrow_forward_ios),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Theme.of(context).accentColor,
+                  ),
                 ],
               ),
             )

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nixlab_admin/providers/firebase_provider.dart';
+import 'package:nixlab_admin/screens/panels/user_profile.dart';
+import 'package:nixlab_admin/widgets/custom_app_bar.dart';
+import 'package:nixlab_admin/widgets/custom_body_scroll_view.dart';
 import 'package:nixlab_admin/widgets/loading_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -20,54 +23,13 @@ class _AdminPanelState extends State<AdminPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final bodyHeight = MediaQuery.of(context).size.height;
-    final bodyWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            _customAppBar(bodyWidth),
-            _customBodyArea(bodyHeight, bodyWidth),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Padding _customAppBar(double width) => Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 8.0,
-        ),
-        child: Row(
-          children: [
-            IconButton(
-              padding: EdgeInsets.zero,
-              icon: Icon(
-                Icons.arrow_back,
-                size: 40.0,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            const SizedBox(width: 8.0),
-            Text(
-              'Admin',
-              style: TextStyle(
-                fontSize: width * 0.08,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Expanded _customBodyArea(double height, double width) => Expanded(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
+            CustomAppBar(title: 'Admins'),
+            CustomBodyScrollView(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 FutureBuilder<List<QueryDocumentSnapshot>>(
@@ -91,6 +53,21 @@ class _AdminPanelState extends State<AdminPanel> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(16.0))),
                           child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => UserProfile(
+                                    firstName: data[i]['fname'],
+                                    lastName: data[i]['lname'],
+                                    imgUrl: data[i]['imgUrl'],
+                                    email: data[i]['email'],
+                                    userName: data[i]['uname'],
+                                    dateJoined: data[i]['timestamp'],
+                                  ),
+                                ),
+                              );
+                            },
                             contentPadding: const EdgeInsets.all(0.0),
                             leading: CircleAvatar(
                               radius: 40.0,
@@ -118,8 +95,10 @@ class _AdminPanelState extends State<AdminPanel> {
                   },
                 )
               ],
-            ),
-          ),
+            ))
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

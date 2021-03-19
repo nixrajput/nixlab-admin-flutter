@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nixlab_admin/constants/colors.dart';
 import 'package:nixlab_admin/providers/firebase_provider.dart';
 import 'package:nixlab_admin/screens/panels/admin.dart';
+import 'package:nixlab_admin/screens/panels/downloads.dart';
+import 'package:nixlab_admin/screens/panels/projects.dart';
 import 'package:nixlab_admin/screens/panels/users.dart';
 import 'package:nixlab_admin/screens/profile.dart';
 import 'package:nixlab_admin/widgets/grid_menu_button.dart';
@@ -127,12 +129,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     GridMenuButton(
                       icon: Icons.folder,
                       label: 'Projects',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => ProjectPanel()));
+                      },
                     ),
                     GridMenuButton(
                       icon: Icons.cloud_download,
                       label: 'Downloads',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => DownloadPanel()));
+                      },
                     ),
                     GridMenuButton(
                       icon: Icons.feedback,

@@ -5,6 +5,7 @@ class FirebaseProvider with ChangeNotifier {
   static final fireStore = FirebaseFirestore.instance;
   final appInfoCollection = fireStore.collection('app_info');
   final userCollection = fireStore.collection('users');
+  final projectCollection = fireStore.collection('projects');
   late DocumentSnapshot _userSnapshot;
 
   DocumentSnapshot get userSnapshot => _userSnapshot;
@@ -26,7 +27,15 @@ class FirebaseProvider with ChangeNotifier {
   }
 
   Future<List<QueryDocumentSnapshot>> getUsersData() async {
-    QuerySnapshot _usersData = await userCollection.get();
+    QuerySnapshot _usersData = await userCollection.get().catchError((err) {
+      print(err.message);
+      throw err;
+    });
     return _usersData.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot>> getDownloads() async {
+    QuerySnapshot _projectData = await projectCollection.get();
+    return _projectData.docs;
   }
 }
